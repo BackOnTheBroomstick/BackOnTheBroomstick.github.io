@@ -1,112 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Back on the Broomstick | Home</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1e1e1e;
-            color: #e0dcdc;
-            text-align: center;
-            padding: 20px;
-        }
-        .header {
-            background: #2e2e2e;
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #c0a17e;
-            border-radius: 10px;
-        }
-        .nav {
-            background: #2e2e2e;
-            padding: 10px;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-        .nav a {
-            color: #e0dcdc;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: #2e2e2e;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
-            margin-bottom: 20px;
-        }
-        h1, h2 {
-            color: #c0a17e;
-        }
-        .btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 24px;
-            background: #c0a17e;
-            color: #1e1e1e;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-        .btn:hover {
-            background: #a07f5b;
-            transform: scale(1.05);
-        }
-        footer {
-            background: #2e2e2e;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-        .social-icons img {
-            width: 30px;
-            margin: 0 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birth Chart Tool</title>
+  <style>
+    /* Styles from the original chart.html are kept */
+    @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+    body { margin:0; padding:0; background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); color:#ececec;
+      font-family:'MedievalSharp', cursive; display:flex; flex-direction:column; align-items:center; min-height:100vh; }
+    #ui, #report { background:rgba(0,0,0,0.7); border:2px solid #9fdfbf; border-radius:12px; padding:20px;
+      margin-top:20px; width:360px; box-shadow:0 0 15px rgba(0,0,0,0.8); }
+    #report { width:90%; max-width:800px; max-height:70vh; overflow-y:auto; border-style:dashed; }
+    label { display:block; margin-top:10px; font-size:16px; color:#f0e68c; }
+    input, select, button { display:block; margin:6px 0; width:100%; padding:8px;
+      border:1px solid #444; border-radius:4px; background:#333; color:#ddd; box-sizing:border-box; }
+    button { background:#5a8f7b; cursor:pointer; font-weight:bold; transition:background .3s; font-family:inherit; }
+    button:hover { background:#7abf9e; }
+    h2 { color:#9fdfbf; text-align:center; margin-bottom:20px; }
+    h3 { color:#f0e68c; border-bottom:1px solid #444; padding-bottom:5px; margin-top:15px; font-size:1.1em; }
+    p { margin:5px 0 15px; line-height:1.5; color:#ccc; font-size:0.95em; }
+    .section { background:rgba(255,255,255,0.05); padding:10px 15px; margin-bottom:10px; border-radius:6px; }
+    .loading { text-align:center; font-size:1.2em; color:#f0e68c; padding:30px; }
+    #report::-webkit-scrollbar { width:8px; }
+    #report::-webkit-scrollbar-track { background:rgba(0,0,0,0.3); border-radius:4px; }
+    #report::-webkit-scrollbar-thumb { background:#5a8f7b; border-radius:4px; }
+    #report::-webkit-scrollbar-thumb:hover { background:#7abf9e; }
+
+    /* Styles for the new header and nav (can be adjusted if needed) */
+    .header {
+        background: rgba(0,0,0,0.5); /* Using original chart theme element */
+        padding: 15px; /* Adjusted padding */
+        text-align: center;
+        font-size: 20px; /* Adjusted font size */
+        font-weight: bold;
+        color: #9fdfbf; /* Using original chart theme color */
+        border-radius: 10px;
+        width: 90%; /* Match report width */
+        max-width: 840px; /* Match report max-width + padding */
+        margin-top: 20px; /* Add some top margin */
+        box-sizing: border-box; /* Include padding in width */
+    }
+    .header img { /* Style for the logo */
+        max-height: 100px; /* Adjust logo size */
+        width: auto;
+        display: block;
+        margin: 0 auto 10px; /* Center logo and add space below */
+    }
+    .header p { /* Style for the header text */
+      margin: 0; /* Remove default paragraph margin */
+      color: #ececec; /* Use body text color */
+      font-size: 16px; /* Adjust text size */
+    }
+    .nav {
+        background: rgba(0,0,0,0.5); /* Using original chart theme element */
+        padding: 10px;
+        border-radius: 10px;
+        margin-top: 10px;
+        text-align: center; /* Center the link */
+        width: 90%; /* Match report width */
+        max-width: 840px; /* Match report max-width + padding */
+        box-sizing: border-box; /* Include padding in width */
+    }
+    .nav a {
+        color: #ececec; /* Using original chart theme color */
+        text-decoration: none;
+        margin: 0 15px;
+        font-weight: bold;
+        font-size: 1.1em; /* Make it slightly larger */
+        padding: 5px 10px; /* Add padding for better click area */
+        border: 1px solid transparent; /* Prepare for hover effect */
+        border-radius: 5px;
+        transition: color 0.3s, border-color 0.3s;
+    }
+    .nav a:hover {
+        color: #f0e68c; /* Highlight color on hover */
+        border-color: #f0e68c; /* Add border on hover */
+    }
+
+  </style>
 </head>
 <body>
-    <div class="header">
-        <img src="https://static.wixstatic.com/media/5d5d7e_ac69215dea794d05bbc7ff9c0128805f~mv2.png/v1/fill/w_177,h_177,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Copy%20of%20BotB%20besom%20sticker.png" alt="Back on the Broomstick Logo">
-        <p>with hosts Laylla & Chelle</p>
-    </div>
-    <div class="nav">
-        <a href="index.html">Home</a>
-        <a href="podcast.html">Podcast</a>
-        <a href="about-the-witches.html">About the Witches</a>
-        <a href="grimoire.html">Grimoire</a>
-        <a href="discussion-board.html">Discussion Board</a>
-        <a href="contact.html">Contact</a>
-    </div>
-    <div class="container">
-        <h1>Welcome to Back on the Broomstick</h1>
-        <p>Join hosts Laylla and Chelle as they reconnect with their pagan roots, exploring modern witchcraft, spells, rituals, and magical theory in today's practices.</p>
-        <a href="podcast.html" class="btn">Explore the Podcast</a>
-    </div>
-    <div class="container">
-        <h2>Latest Episode</h2>
-        <p>Delve into our recent discussion on [Episode Topic], where we explore [brief description].</p>
-        <a href="latest-episode.html" class="btn">Listen Now</a>
-    </div>
-    <div class="container">
-        <h2>Meet the Witches</h2>
-        <p>Laylla and Chelle, with over 30 years of experience, share their journey back to the craft, offering insights into spell crafting, tarot, herb magic, and more.</p>
-        <a href="about-the-witches.html" class="btn">Learn More</a>
-    </div>
-    <footer>
-        <div class="social-icons">
-            <a href="https://www.instagram.com/backonthebroomstick/"><img src="instagram-icon.png" alt="Instagram"></a>
-            <a href="https://www.facebook.com/BackOnTheBroomstick/"><img src="facebook-icon.png" alt="Facebook"></a>
-            <a href="#"><img src="threads-icon.png" alt="Threads"></a>
-        </div>
-        <p>Contact us at <a href="mailto:backonthebroomstick@gmail.com" style="color: #c0a17e; text-decoration: none;">backonthebroomstick@gmail.com</a></p>
-    </footer>
+
+  <div class="header">
+    <img src="https://static.wixstatic.com/media/5d5d7e_ac69215dea794d05bbc7ff9c0128805f~mv2.png/v1/fill/w_177,h_177,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Copy%20of%20BotB%20besom%20sticker.png" alt="Back on the Broomstick Logo">
+    <p>with hosts Laylla & Chelle</p>
+  </div>
+
+  <div class="nav">
+    <a href="#">Astro Chart</a>
+  </div>
+
+  <div id="ui">
+    <h2>Birth Chart Details</h2>
+    <label for="month">Birth Month:</label>
+    <select id="month" required>
+      <option value="" disabled selected>Select Month</option>
+      <option value="1">January</option> <option value="2">February</option> <option value="3">March</option>
+      <option value="4">April</option> <option value="5">May</option> <option value="6">June</option>
+      <option value="7">July</option> <option value="8">August</option> <option value="9">September</option>
+      <option value="10">October</option> <option value="11">November</option> <option value="12">December</option>
+    </select>
+    <label for="day">Birth Day:</label>
+    <input type="number" id="day" min="1" max="31" placeholder="e.g., 15" required>
+    <label for="year">Birth Year:</label>
+    <input type="number" id="year" min="1900" max="2099" placeholder="e.g., 1990" required>
+    <label for="time">Birth Time (Optional):</label>
+    <input type="time" id="time">
+    <label for="city">Birth City (Optional):</label>
+    <input type="text" id="city" placeholder="e.g., London">
+    <label for="state">Birth State/Country (Optional):</label>
+    <input type="text" id="state" placeholder="e.g., UK">
+    <button onclick="generateChart()">Generate Chart</button>
+  </div>
+
+  <div id="report" style="display:none;">
+    <h2>Your Astrological Report</h2>
+    <div id="chart-content"></div>
+  </div>
+
+  <script>
+    const astroData = {
+      'Aries': { desc: 'Assertive, energetic, pioneering, courageous, confident, dynamic.', element: 'Fire', modality: 'Cardinal', ruler: 'Mars', luckyNumbers: [1, 9], luckyDays: ['Tuesday'], luckyColors: ['Red'], compatibility: ['Leo', 'Sagittarius', 'Gemini', 'Aquarius'] },
+      'Taurus': { desc: 'Patient, reliable, warmhearted, loving, persistent, determined.', element: 'Earth', modality: 'Fixed', ruler: 'Venus', luckyNumbers: [2, 6], luckyDays: ['Friday', 'Monday'], luckyColors: ['Green', 'Pink'], compatibility: ['Virgo', 'Capricorn', 'Cancer', 'Pisces'] },
+      'Gemini': { desc: 'Adaptable, versatile, communicative, witty, intellectual, youthful.', element: 'Air', modality: 'Mutable', ruler: 'Mercury', luckyNumbers: [5, 7], luckyDays: ['Wednesday'], luckyColors: ['Yellow', 'Light Blue'], compatibility: ['Libra', 'Aquarius', 'Aries', 'Leo'] },
+      'Cancer': { desc: 'Emotional, loving, intuitive, imaginative, protective, sympathetic.', element: 'Water', modality: 'Cardinal', ruler: 'Moon', luckyNumbers: [2, 3], luckyDays: ['Monday', 'Thursday'], luckyColors: ['White', 'Silver'], compatibility: ['Scorpio', 'Pisces', 'Taurus', 'Virgo'] },
+      'Leo': { desc: 'Generous, warmhearted, creative, enthusiastic, broad-minded, faithful.', element: 'Fire', modality: 'Fixed', ruler: 'Sun', luckyNumbers: [1, 4], luckyDays: ['Sunday'], luckyColors: ['Gold', 'Orange'], compatibility: ['Aries', 'Sagittarius', 'Gemini', 'Libra'] },
+      'Virgo': { desc: 'Modest, meticulous, reliable, practical, diligent, intelligent.', element: 'Earth', modality: 'Mutable', ruler: 'Mercury', luckyNumbers: [5, 6], luckyDays: ['Wednesday'], luckyColors: ['Grey', 'Beige', 'Navy'], compatibility: ['Taurus', 'Capricorn', 'Cancer', 'Scorpio'] },
+      'Libra': { desc: 'Diplomatic, urbane, romantic, charming, idealistic, peaceable.', element: 'Air', modality: 'Cardinal', ruler: 'Venus', luckyNumbers: [4, 6], luckyDays: ['Friday'], luckyColors: ['Blue', 'Jade Green'], compatibility: ['Gemini', 'Aquarius', 'Leo', 'Sagittarius'] },
+      'Scorpio': { desc: 'Determined, forceful, emotional, intuitive, powerful, passionate.', element: 'Water', modality: 'Fixed', ruler: 'Pluto, Mars', luckyNumbers: [8, 9], luckyDays: ['Tuesday'], luckyColors: ['Black', 'Deep Red'], compatibility: ['Cancer', 'Pisces', 'Virgo', 'Capricorn'] },
+      'Sagittarius': { desc: 'Optimistic, freedom-loving, jovial, good-humored, honest, intellectual.', element: 'Fire', modality: 'Mutable', ruler: 'Jupiter', luckyNumbers: [3, 7], luckyDays: ['Thursday'], luckyColors: ['Purple', 'Dark Blue'], compatibility: ['Aries', 'Leo', 'Libra', 'Aquarius'] },
+      'Capricorn': { desc: 'Practical, prudent, ambitious, disciplined, patient, careful.', element: 'Earth', modality: 'Cardinal', ruler: 'Saturn', luckyNumbers: [4, 8], luckyDays: ['Saturday'], luckyColors: ['Brown', 'Grey', 'Black'], compatibility: ['Taurus', 'Virgo', 'Scorpio', 'Pisces'] },
+      'Aquarius': { desc: 'Friendly, humanitarian, honest, loyal, original, inventive.', element: 'Air', modality: 'Fixed', ruler: 'Uranus, Saturn', luckyNumbers: [4, 7], luckyDays: ['Saturday', 'Sunday'], luckyColors: ['Light Blue', 'Silver'], compatibility: ['Gemini', 'Libra', 'Aries', 'Sagittarius'] },
+      'Pisces': { desc: 'Imaginative, sensitive, compassionate, kind, selfless, intuitive.', element: 'Water', modality: 'Mutable', ruler: 'Neptune, Jupiter', luckyNumbers: [3, 9], luckyDays: ['Thursday', 'Monday'], luckyColors: ['Sea Green', 'Aqua'], compatibility: ['Cancer', 'Scorpio', 'Taurus', 'Capricorn'] }
+    };
+
+    function getZodiacSign(day, month) {
+      if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) return 'Aries';
+      if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) return 'Taurus';
+      if ((month == 5 && day >= 21) || (month == 6 && day <= 20)) return 'Gemini';
+      if ((month == 6 && day >= 21) || (month == 7 && day <= 22)) return 'Cancer';
+      if ((month == 7 && day >= 23) || (month == 8 && day <= 22)) return 'Leo';
+      if ((month == 8 && day >= 23) || (month == 9 && day <= 22)) return 'Virgo';
+      if ((month == 9 && day >= 23) || (month == 10 && day <= 22)) return 'Libra';
+      if ((month == 10 && day >= 23) || (month == 11 && day <= 21)) return 'Scorpio';
+      if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) return 'Sagittarius';
+      if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) return 'Capricorn';
+      if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) return 'Aquarius';
+      if ((month == 2 && day >= 19) || (month == 3 && day <= 20)) return 'Pisces';
+      return null; // Should not happen with validation
+    }
+
+    function generateChart() {
+      const month = parseInt(document.getElementById('month').value);
+      const day = parseInt(document.getElementById('day').value);
+      const year = parseInt(document.getElementById('year').value);
+      const timeVal = document.getElementById('time').value;
+      const city = document.getElementById('city').value.trim();
+      const state = document.getElementById('state').value.trim();
+      const reportDiv = document.getElementById('report');
+      const contentDiv = document.getElementById('chart-content');
+
+      // Basic validation
+      if (!month || !day || !year || day < 1 || day > 31 || year < 1900 || year > 2099) {
+        alert('Please enter a valid birth date (Month, Day, Year).');
+        return;
+      }
+       // More specific day validation based on month (simple version)
+      const daysInMonth = new Date(year, month, 0).getDate();
+      if (day > daysInMonth) {
+          alert(`Invalid day (${day}) for the selected month.`);
+          return;
+      }
+
+
+      contentDiv.innerHTML = '<p class="loading">Generating your celestial insights...</p>';
+      reportDiv.style.display = 'block';
+      // Scroll to the report section smoothly
+      reportDiv.scrollIntoView({ behavior: 'smooth' });
+
+
+      // Simulate loading time
+      setTimeout(() => {
+        const sign = getZodiacSign(day, month);
+        if (!sign) {
+            contentDiv.innerHTML = '<p style="color:red;">Error determining Zodiac sign. Please check the date.</p>';
+            return;
+        }
+        const info = astroData[sign];
+        let html = `<h2>${sign} (${month}/${day}/${year})</h2>`;
+        html += `<div class=\"section\"><h3 title=\"Core personality traits associated with your Sun sign.\">Key Traits</h3><p>${info.desc}</p></div>`;
+        html += `<div class=\"section\"><h3 title=\"The elemental quality that influences your temperament.\">Element</h3><p>${info.element}</p></div>`;
+        html += `<div class=\"section\"><h3 title=\"Your sign's mode of action: Initiator, Sustainer, or Adapter.\">Modality</h3><p>${info.modality}</p></div>`;
+        html += `<div class=\"section\"><h3 title=\"The planet that governs your Sun sign's energy.\">Ruling Planet</h3><p>${info.ruler}</p></div>`;
+        html += `<div class=\"section\"><h3 title=\"Numbers considered especially favorable for your sign.\">Lucky Numbers</h3><p>${info.luckyNumbers.join(', ')}</p></div>`;
+        html += `<div class=\"section\"><h3 title=\"Weekdays aligned with your sign's positive energy.\">Lucky Days</h3><p>${info.luckyDays.join(', ')}</p></div>`;
+        html += `<div class=\"section\"><h3 title=\"Colors that harmonize with your sign's vibrations.\">Lucky Colors</h3><p>${info.luckyColors.join(', ')}</p></div>`;
+        html += `<div class=\"section\"><h3 title=\"Signs most naturally in harmony with your sign.\">Compatibility</h3><p>${info.compatibility.join(', ')}</p></div>`;
+        html += `<div class=\"section\"><h3 title=\"Your date, time, and place of birth.\">Birth Details</h3><p>${month}/${day}/${year}`;
+        if (timeVal) html += ` at ${timeVal}`;
+        if (city || state) html += ` in ${city}${city && state ? ', ' : ''}${state}`;
+        html += `.</p></div>`;
+
+        contentDiv.innerHTML = html;
+      }, 1000); // 1 second delay
+    }
+  </script>
 </body>
 </html>
