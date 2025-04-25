@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagan Witchy Norse 3-Card Spread</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+    body { margin:0; padding:0; background: linear-gradient(135deg,#16213e,#1a1a2e,#0f3460); color:#ececec; font-family:'MedievalSharp',cursive; display:flex; flex-direction:column; align-items:center; min-height:100vh; }
+    #controls { background:rgba(0,0,0,0.7); padding:20px; margin:20px; border:2px solid #9fdfbf; border-radius:12px; text-align:center; width:520px; }
+    #controls p.instructions { font-size:14px; margin:0 0 12px; }
+    #controls label { margin:0 10px; }
+    #actionRow { display:flex; align-items:flex-end; justify-content:center; gap:20px; margin-top:10px; }
+    #actionRow button { padding:10px 20px; border:2px solid #f0e68c; border-radius:6px; background:#9fdfbf; color:#16213e; font-size:14px; cursor:pointer; transition:background .3s,transform .2s; }
+    #actionRow button:hover { background:#8cd3a5; transform:translateY(-2px); }
+    #deck { width:280px; height:420px; cursor:pointer; border:2px solid #9fdfbf; border-radius:6px; }
+    #table { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin:20px; }
+    .slot { width:280px; text-align:center; }
+    .slot img { width:280px; height:420px; border:2px solid #9fdfbf; border-radius:6px; background:#1f1f3e; cursor:pointer; }
+    .slot h4 { margin:8px 0 4px; font-size:16px; color:#9fdfbf; }
+    .description { background:rgba(0,0,0,0.6); padding:10px; border-radius:6px; font-size:14px; margin-top:4px; min-height:100px; text-align:left; }
+    #modalOverlay { position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.9); display:none; justify-content:center; align-items:center; z-index:1000; }
+    #modalOverlay img { max-width:90%; max-height:90%; border:2px solid #9fdfbf; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <img src="https://static.wixstatic.com/media/5d5d7e_ac69215dea794d05bbc7ff9c0128805f~mv2.png/v1/fill/w_177,h_177,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Copy%20of%20BotB%20besom%20sticker.png" alt="Back on the Broomstick Logo" style="width:60px; vertical-align:middle;">
+    <span style="margin-left:10px; font-size:20px; vertical-align:middle;">Back on the Broomstick Tools</span>
+  </div>
+  <!-- Navigation -->
+  <div class="nav">
+    <a href="index.html">Astro Chart</a>
+  </div>
+
+  <div id="controls">
+    <p class="instructions">Press <strong>Shuffle</strong> to shuffle the deck and reset slots.<br>Then press <strong>Draw</strong> up to three times to reveal new random cards.<br>Click any card or the deck to view full-size image.<br>Card details appear below each card.</p>
+    <label><input type="radio" name="spread" value="past" checked> Past - Present - Future</label>
+    <label><input type="radio" name="spread" value="situation"> Situation - Action - Outcome</label>
+    <div id="actionRow">
+      <button id="shuffleBtn">Shuffle</button>
+      <img id="deck" src="major_arcana_fool.png" alt="Tarot deck">
+      <button id="drawBtn">Draw</button>
+    </div>
+  </div>
+  <div id="table">
+    <div class="slot" id="slot0"><h4>...</h4><img src="major_arcana_fool.png" alt="card back"><div class="description"></div></div>
+    <div class="slot" id="slot1"><h4>...</h4><img src="major_arcana_fool.png" alt="card back"><div class="description"></div></div>
+    <div class="slot" id="slot2"><h4>...</h4><img src="major_arcana_fool.png" alt="card back"><div class="description"></div></div>
+  </div>
+
+  <div id="modalOverlay"><img src="" alt="Full card"></div>
+
+  <script id="tarotData" type="application/json">
+  {
+    "majorArcana": [
+      {"key":"major_arcana_fool","name":"The Fool","meaning":"Pure potential and innocent trust in the journey ahead.","element":"Air","spell":"To embark on a new journey with trust and optimism.","herb":"Ginseng – cosmic energy and new beginnings."},
+      {"key":"major_arcana_magician","name":"The Magician","meaning":"Manifestation and willpower; harnessing the elements.","element":"Air","spell":"To manifest your will and tap into personal power.","herb":"Astragalus – creativity and strength."},
+      {"key":"major_arcana_priestess","name":"The High Priestess","meaning":"Intuition, mystery, and inner wisdom.","element":"Water","spell":"To enhance intuition and access inner wisdom.","herb":"Peony – lunar insight and mystery."},
+      {"key":"major_arcana_empress","name":"The Empress","meaning":"Abundance, fertility, and maternal care.","element":"Earth","spell":"To nurture creativity, fertility, and abundance.","herb":"Rose – love and fertility."},
+      {"key":"major_arcana_emperor","name":"The Emperor","meaning":"Authority, structure, and protection.","element":"Fire","spell":"To strengthen personal authority and stability.","herb":"Oak – strength and stability."},
+      {"key":"major_arcana_hierophant","name":"The Hierophant","meaning":"Tradition, spiritual wisdom, and mentorship.","element":"Earth","spell":"To seek spiritual guidance and wisdom.","herb":"Sage – purification and wisdom."},
+      {"key":"major_arcana_lovers","name":"The Lovers","meaning":"Love, partnership, and choice.","element":"Air","spell":"To attract love or deepen partnership.","herb":"Parsley – enhances attraction."},
+      {"key":"major_arcana_chariot","name":"The Chariot","meaning":"Willpower, determination, and victory.","element":"Water","spell":"To achieve victory and assert willpower.","herb":"Cypress – balance and drive."},
+      {"key":"major_arcana_strength","name":"Strength","meaning":"Inner strength, compassion, and courage.","element":"Fire","spell":"To gain inner strength and confidence.","herb":"Cayenne – vitality and courage."},
+      {"key":"major_arcana_hermit","name":"The Hermit","meaning":"Solitude, introspection, and wisdom.","element":"Earth","spell":"To find guidance within.","herb":"Licorice – calm and patience."},
+      {"key":"major_arcana_wheel","name":"Wheel of Fortune","meaning":"Cycles, fate, and change.","element":"Fire","spell":"To invite good fortune.","herb":"Slippery Elm – comfort in change."},
+      {"key":"major_arcana_justice","name":"Justice","meaning":"Karma, fairness, and accountability.","element":"Air","spell":"To restore balance.","herb":"Plantain – harmony and healing."},
+      {"key":"major_arcana_hanged","name":"The Hanged Man","meaning":"Sacrifice, letting go, and new perspective.","element":"Water","spell":"To release old patterns.","herb":"Kelp – surrender and insight."},
+      {"key":"major_arcana_death","name":"Death","meaning":"Transformation, endings, and rebirth.","element":"Water","spell":"To embrace transformation.","herb":"Elderflower – purification and renewal."},
+      {"key":"major_arcana_temperance","name":"Temperance","meaning":"Balance, healing, and moderation.","element":"Fire","spell":"To bring harmony.","herb":"Echinacea – balance and healing."},
+      {"key":"major_arcana_devil","name":"The Devil","meaning":"Shadow self, temptation, and bondage.","element":"Earth","spell":"To break free from negatives.","herb":"Lobelia – breaking habits."},
+      {"key":"major_arcana_tower","name":"The Tower","meaning":"Sudden upheaval and revelation.","element":"Fire","spell":"To banish falsehoods.","herb":"Garlic – protection and breakthrough."},
+      {"key":"major_arcana_star","name":"The Star","meaning":"Hope, inspiration, and serenity.","element":"Air","spell":"To inspire hope.","herb":"Skullcap – peace and clarity."},
+      {"key":"major_arcana_moon","name":"The Moon","meaning":"Intuition, illusions, and the subconscious.","element":"Water","spell":"To explore intuition.","herb":"Lemon Balm – lunar calm."},
+      {"key":"major_arcana_sun","name":"The Sun","meaning":"Joy, success, and vitality.","element":"Fire","spell":"To celebrate success.","herb":"Angelica – uplifting energy."},
+      {"key":"major_arcana_judgement","name":"Judgement","meaning":"Rebirth, awakening, and redemption.","element":"Fire","spell":"To renew self.","herb":"Golden Seal – purification."},
+      {"key":"major_arcana_world","name":"The World","meaning":"Completion, wholeness, and fulfillment.","element":"Earth","spell":"To honor completion.","herb":"Comfrey – unity and healing."}
+    ],
+    "minorArcana": {
+      "wands": [
+        {"key":"minor_arcana_wands_ace","name":"Ace of Wands","meaning":"A spark of new inspiration.","element":"Fire","spell":"To ignite creativity.","herb":"Yarrow – courage and openness."},
+        {"key":"minor_arcana_wands_2","name":"Two of Wands","meaning":"Planning and decisions.","element":"Fire","spell":"To expand horizons.","herb":"Basil – ambition."},
+        {"key":"minor_arcana_wands_3","name":"Three of Wands","meaning":"Foresight and expansion.","element":"Fire","spell":"To attract opportunity.","herb":"Saffron – optimism."},
+        {"key":"minor_arcana_wands_4","name":"Four of Wands","meaning":"Celebration and stability.","element":"Fire","spell":"To bless home.","herb":"Fennel – purification."},
+        {"key":"minor_arcana_wands_5","name":"Five of Wands","meaning":"Conflict and challenge.","element":"Fire","spell":"To resolve disputes.","herb":"Turmeric – calm tensions."},
+        {"key":"minor_arcana_wands_6","name":"Six of Wands","meaning":"Victory and recognition.","element":"Fire","spell":"To achieve success.","herb":"Hawthorn – triumph."},
+        {"key":"minor_arcana_wands_7","name":"Seven of Wands","meaning":"Defense and perseverance.","element":"Fire","spell":"To bolster courage.","herb":"Wild Ginger – resilience."},
+        {"key":"minor_arcana_wands_8","name":"Eight of Wands","meaning":"Swift action and movement.","element":"Fire","spell":"To speed progress.","herb":"Sassafras – quickening."},
+        {"key":"minor_arcana_wands_9","name":"Nine of Wands","meaning":"Resilience and stamina.","element":"Fire","spell":"To sustain strength.","herb":"Bayberry – persistence."},
+        {"key":"minor_arcana_wands_10","name":"Ten of Wands","meaning":"Burden and responsibility.","element":"Fire","spell":"To release burdens.","herb":"Prickly Ash – relief."},
+        {"key":"minor_arcana_wands_page","name":"Page of Wands","meaning":"Enthusiasm and discovery.","element":"Fire","spell":"To spark enthusiasm.","herb":"Shepherd’s Purse – support."},
+        {"key":"minor_arcana_wands_knight","name":"Knight of Wands","meaning":"Passionate action.","element":"Fire","spell":"To fuel passion.","herb":"Aconite – boldness (use with caution)."},
+        {"key":"minor_arcana_wands_queen","name":"Queen of Wands","meaning":"Confidence and warmth.","element":"Fire","spell":"To inspire charisma.","herb":"Raspberry Leaf – empowerment."},
+        {"key":"minor_arcana_wands_king","name":"King of Wands","meaning":"Visionary leadership.","element":"Fire","spell":"To lead boldly.","herb":"Cinnamon – success."}
+      ],
+      "cups": [
+        {"key":"minor_arcana_cups_ace","name":"Ace of Cups","meaning":"Emotional renewal.","element":"Water","spell":"To open heart.","herb":"Lotus – compassion."},
+        {"key":"minor_arcana_cups_2","name":"Two of Cups","meaning":"Partnership and union.","element":"Water","spell":"To deepen bond.","herb":"Uva Ursi – healing."},
+        {"key":"minor_arcana_cups_3","name":"Three of Cups","meaning":"Celebration and friendship.","element":"Water","spell":"To share joy.","herb":"Trillium – community."},
+        {"key":"minor_arcana_cups_4","name":"Four of Cups","meaning":"Contemplation and apathy.","element":"Water","spell":"To find gratitude.","herb":"Burdock – clarity."},
+        {"key":"minor_arcana_cups_5","name":"Five of Cups","meaning":"Loss and healing.","element":"Water","spell":"To release grief.","herb":"Horsetail – resilience."},
+        {"key":"minor_arcana_cups_6","name":"Six of Cups","meaning":"Nostalgia and innocence.","element":"Water","spell":"To recall joy.","herb":"Watermelon – sweetness."},
+        {"key":"minor_arcana_cups_7","name":"Seven of Cups","meaning":"Choices and illusion.","element":"Water","spell":"To see clearly.","herb":"Juniper Berries – insight."},
+        {"key":"minor_arcana_cups_8","name":"Eight of Cups","meaning":"Departure and quest.","element":"Water","spell":"To seek purpose.","herb":"Gravel Root – release."},
+        {"key":"minor_arcana_cups_9","name":"Nine of Cups","meaning":"Satisfaction and wishes.","element":"Water","spell":"To fulfill desire.","herb":"Squaw Vine – contentment."},
+        {"key":"minor_arcana_cups_10","name":"Ten of Cups","meaning":"Harmony and blessings.","element":"Water","spell":"To bless unity.","herb":"Marijuana – peace."},
+        {"key":"minor_arcana_cups_page","name":"Page of Cups","meaning":"Imagination and messages.","element":"Water","spell":"To inspire creativity.","herb":"Damiana – dreamwork."},
+        {"key":"minor_arcana_cups_knight","name":"Knight of Cups","meaning":"Romantic pursuit.","element":"Water","spell":"To follow heart.","herb":"Sarsaparilla – passion."},
+        {"key":"minor_arcana_cups_queen","name":"Queen of Cups","meaning":"Compassion and intuition.","element":"Water","spell":"To deepen empathy.","herb":"Lady’s Mantle – nurturing."},
+        {"key":"minor_arcana_cups_king","name":"King of Cups","meaning":"Emotional mastery.","element":"Water","spell":"To balance emotions.","herb":"Saw Palmetto – stability."}
+      ],
+      "swords": [
+        {"key":"minor_arcana_swords_ace","name":"Ace of Swords","meaning":"Mental clarity.","element":"Air","spell":"To cut through confusion.","herb":"Chamomile – focus."},
+        {"key":"minor_arcana_swords_2","name":"Two of Swords","meaning":"Indecision and peace.","element":"Air","spell":"To choose wisely.","herb":"Passionflower – calm."},
+        {"key":"minor_arcana_swords_3","name":"Three of Swords","meaning":"Heartbreak and release.","element":"Air","spell":"To heal grief.","herb":"Pleurisy Root – release."},
+        {"key":"minor_arcana_swords_4","name":"Four of Swords","meaning":"Rest and recovery.","element":"Air","spell":"To restore energy.","herb":"Mullein – healing rest."},
+        {"key":"minor_arcana_swords_5","name":"Five of Swords","meaning":"Conflict and resolution.","element":"Air","spell":"To restore peace.","herb":"Mistletoe – forgiveness."},
+        {"key":"minor_arcana_swords_6","name":"Six of Swords","meaning":"Transition and healing.","element":"Air","spell":"To move forward.","herb":"Vervain – protection."},
+        {"key":"minor_arcana_swords_7","name":"Seven of Swords","meaning":"Strategy and stealth.","element":"Air","spell":"To reveal truths.","herb":"Wood Betony – clarity."},
+        {"key":"minor_arcana_swords_8","name":"Eight of Swords","meaning":"Restriction and liberation.","element":"Air","spell":"To free mind.","herb":"Black Cohosh – release."},
+        {"key":"minor_arcana_swords_9","name":"Nine of Swords","meaning":"Anxiety and release.","element":"Air","spell":"To banish fear.","herb":"Valerian – calm."},
+        {"key":"minor_arcana_swords_10","name":"Ten of Swords","meaning":"Finality and renewal.","element":"Air","spell":"To find closure.","herb":"Ephedra – revival."},
+        {"key":"minor_arcana_swords_page","name":"Page of Swords","meaning":"Curiosity and communication.","element":"Air","spell":"To speak truth.","herb":"Dill – clarity."},
+        {"key":"minor_arcana_swords_knight","name":"Knight of Swords","meaning":"Action and ambition.","element":"Air","spell":"To push forward.","herb":"Wild Cherry Bark – focus."},
+        {"key":"minor_arcana_swords_queen","name":"Queen of Swords","meaning":"Objectivity and boundaries.","element":"Air","spell":"To uphold truth.","herb":"Lady’s Slipper – calm."},
+        {"key":"minor_arcana_swords_king","name":"King of Swords","meaning":"Authority and intellect.","element":"Air","spell":"To bring justice.","herb":"St. John’s Wort – clarity."}
+      ],
+      "pentacles": [
+        {"key":"minor_arcana_pentacles_ace","name":"Ace of Pentacles","meaning":"Prosperity and opportunity.","element":"Earth","spell":"To attract abundance.","herb":"Whole Grains – foundational wealth."},
+        {"key":"minor_arcana_pentacles_2","name":"Two of Pentacles","meaning":"Balance and adaptability.","element":"Earth","spell":"To maintain equilibrium.","herb":"Yellow Dock – flexibility."},
+        {"key":"minor_arcana_pentacles_3","name":"Three of Pentacles","meaning":"Collaboration and skill.","element":"Earth","spell":"To support teamwork.","herb":"Gentian – cooperative healing."},
+        {"key":"minor_arcana_pentacles_4","name":"Four of Pentacles","meaning":"Security and control.","element":"Earth","spell":"To protect resources.","herb":"Cascara Sagrada – release."},
+        {"key":"minor_arcana_pentacles_5","name":"Five of Pentacles","meaning":"Hardship and support.","element":"Earth","spell":"To seek help.","herb":"Mugwort – guidance."},
+        {"key":"minor_arcana_pentacles_6","name":"Six of Pentacles","meaning":"Generosity and reciprocity.","element":"Earth","spell":"To share abundance.","herb":"Hops – balance."},
+        {"key":"minor_arcana_pentacles_7","name":"Seven of Pentacles","meaning":"Patience and assessment.","element":"Earth","spell":"To cultivate patience.","herb":"Rhubarb – steady growth."},
+        {"key":"minor_arcana_pentacles_8","name":"Eight of Pentacles","meaning":"Diligence and mastery.","element":"Earth","spell":"To hone skills.","herb":"Ginger – focus."},
+        {"key":"minor_arcana_pentacles_9","name":"Nine of Pentacles","meaning":"Luxury and independence.","element":"Earth","spell":"To enjoy rewards.","herb":"Dark Grapes – refinement."},
+        {"key":"minor_arcana_pentacles_10","name":"Ten of Pentacles","meaning":"Legacy and fulfillment.","element":"Earth","spell":"To honor legacy.","herb":"Wild Yam – longevity."},
+        {"key":"minor_arcana_pentacles_page","name":"Page of Pentacles","meaning":"Learning and manifestation.","element":"Earth","spell":"To study and build.","herb":"Blue Flag – opportunity."},
+        {"key":"minor_arcana_pentacles_knight","name":"Knight of Pentacles","meaning":"Persistence and routine.","element":"Earth","spell":"To persist.","herb":"Elecampane – steadiness."},
+        {"key":"minor_arcana_pentacles_queen","name":"Queen of Pentacles","meaning":"Nurturing and abundance.","element":"Earth","spell":"To nurture prosperity.","herb":"Marshmallow – comfort."},
+        {"key":"minor_arcana_pentacles_king","name":"King of Pentacles","meaning":"Wealth and generosity.","element":"Earth","spell":"To share success.","herb":"Alfalfa – abundance."}
+      ]
+    }
+  }
+  </script>
+  <script>
+    const data = JSON.parse(document.getElementById('tarotData').textContent);
+    const deckKeys = [...data.majorArcana.map(c=>c.key), ...Object.values(data.minorArcana).flat().map(c=>c.key)];
+    let pool = [], drawCount = 0;
+    const deckImg = document.getElementById('deck');
+    const modal = document.getElementById('modalOverlay');
+    const modalImg = modal.querySelector('img');
+
+    function resetSlots() {
+      drawCount = 0;
+      for(let i=0;i<3;i++){const slot=document.getElementById(`slot${i}`);
+        slot.querySelector('h4').textContent='...';
+        slot.querySelector('img').src='major_arcana_fool.png';
+        slot.querySelector('.description').textContent='';
+      }
+    }
+
+    document.getElementById('shuffleBtn').addEventListener('click',()=>{
+      pool=[...deckKeys]; resetSlots();
+      const rand=pool[Math.floor(Math.random()*pool.length)];
+      deckImg.src=`${rand}.png`;
+    });
+
+    document.getElementById('drawBtn').addEventListener('click',()=>{
+      if(drawCount<3&&pool.length){
+        const idx=Math.floor(Math.random()*pool.length);
+        const key=pool.splice(idx,1)[0];
+        const card=data.majorArcana.find(c=>c.key===key)||Object.values(data.minorArcana).flat().find(c=>c.key===key);
+        const slot=document.getElementById(`slot${drawCount}`);
+        slot.querySelector('img').src=`${key}.png`;
+        slot.querySelector('img').alt=card.name;
+        const spread=document.querySelector('input[name="spread"]:checked').value;
+        const labels=spread==='past'?['Past','Present','Future']:['Situation','Action','Outcome'];
+        slot.querySelector('h4').textContent=labels[drawCount];
+        slot.querySelector('.description').innerHTML=`<strong>${card.name}</strong><br>${card.meaning}<br><em>Element:</em> ${card.element}<br><em>Spell:</em> ${card.spell}<br><em>Herb:</em> ${card.herb}`;
+        drawCount++;
+      }
+    });
+
+    function showFull(src){ modalImg.src=src; modal.style.display='flex'; }
+    document.querySelectorAll('.slot img').forEach(img=>img.addEventListener('click',e=>showFull(e.currentTarget.src)));
+    deckImg.addEventListener('click',()=>showFull(deckImg.src));
+    modal.addEventListener('click',()=>modal.style.display='none');
+  </script>
+</body>
+</html>
